@@ -5,8 +5,11 @@ import itertools
 train = pd.read_csv("/home/kevindong1994/aunalytics/au_train.csv", header=0, delimiter=",")
 test = pd.read_csv("/home/kevindong1994/aunalytics/au_test.csv", header=0, delimiter=",")
 
+train = train.drop("education",axis=1)
+test = test.drop("education",axis=1)
 complete_data = pd.concat([train,test],keys=["train","test"]) # Combine the two dataset. It will make the get_dummies method more convenient.
-
+complete_data["capital_gain_extre"] = 0
+complete_data.loc[complete_data["capital-gain"]==99999,"capital_gain_extre"] = 1
 # Convert all categorical columns to dummy variable
 for each in train.select_dtypes(include="object").dtypes.index[:-1]:
     complete_data = pd.concat([complete_data,pd.get_dummies(complete_data[each],prefix = each,drop_first = True)],axis=1)
